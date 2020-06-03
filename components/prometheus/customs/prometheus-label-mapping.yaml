@@ -1,0 +1,3 @@
+metric_renames:
+  - from: instance:node_cpu:ratio
+    to: instance_node_cpu_ratio

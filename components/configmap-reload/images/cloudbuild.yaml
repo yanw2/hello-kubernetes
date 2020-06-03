@@ -1,0 +1,26 @@
+steps:
+  # Pull images
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'hub.artifactory.gcp.anz/jimmidyson/configmap-reload:$_VERSION'
+    ]
+    id: configmap-reload-$_VERSION 
+    waitFor: ['-']
+
+  # Create tags
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'hub.artifactory.gcp.anz/jimmidyson/configmap-reload:$_VERSION',
+      '$_PLATFORM_REGISTRY/jimmidyson/configmap-reload:$_VERSION'
+    ]
+    waitFor:
+      - configmap-reload-$_VERSION
+
+# Push to GCR
+images:
+  - '$_PLATFORM_REGISTRY/jimmidyson/configmap-reload:$_VERSION'
+
+options:
+  workerPool: $_WORKER

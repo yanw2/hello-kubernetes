@@ -1,0 +1,26 @@
+steps:
+  # Pull images
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'gcr.artifactory.gcp.anz/google-containers/prometheus-to-sd:$_VERSION'
+    ]
+    id: prometheus-to-sd-$_VERSION 
+    waitFor: ['-']
+
+  # Create tags
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'gcr.artifactory.gcp.anz/google-containers/prometheus-to-sd:$_VERSION',
+      '$_PLATFORM_REGISTRY/google-containers/prometheus-to-sd:$_VERSION'
+    ]
+    waitFor:
+      - prometheus-to-sd-$_VERSION
+
+# Push to GCR
+images:
+  - '$_PLATFORM_REGISTRY/google-containers/prometheus-to-sd:$_VERSION'
+
+options:
+  workerPool: $_WORKER

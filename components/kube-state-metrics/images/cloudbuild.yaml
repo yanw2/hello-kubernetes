@@ -1,0 +1,26 @@
+steps:
+  # Pull images
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'quay.artifactory.gcp.anz/coreos/kube-state-metrics:$_VERSION'
+    ]
+    id: kube-state-metrics-$_VERSION 
+    waitFor: ['-']
+
+  # Create tags
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'quay.artifactory.gcp.anz/coreos/kube-state-metrics:$_VERSION',
+      '$_PLATFORM_REGISTRY/observability/kube-state-metrics:$_VERSION'
+    ]
+    waitFor:
+      - kube-state-metrics-$_VERSION
+
+# Push to GCR
+images:
+  - '$_PLATFORM_REGISTRY/observability/kube-state-metrics:$_VERSION'
+
+options:
+  workerPool: $_WORKER
