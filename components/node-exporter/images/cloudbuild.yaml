@@ -1,0 +1,26 @@
+steps:
+  # Pull images
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'hub.artifactory.gcp.anz/prom/node-exporter:$_VERSION'
+    ]
+    id: node-exporter-$_VERSION 
+    waitFor: ['-']
+
+  # Create tags
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'hub.artifactory.gcp.anz/prom/node-exporter:$_VERSION',
+      '$_PLATFORM_REGISTRY/observability/node-exporter:$_VERSION'
+    ]
+    waitFor:
+      - node-exporter-$_VERSION
+
+# Push to GCR
+images:
+  - '$_PLATFORM_REGISTRY/observability/node-exporter:$_VERSION'
+
+options:
+  workerPool: $_WORKER

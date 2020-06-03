@@ -1,0 +1,62 @@
+steps:
+  # Pull images
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'hub.artifactory.gcp.anz/prom/prometheus:$_PROMETHEUS_VERSION'
+    ]
+    id: prometheus-$_PROMETHEUS_VERSION 
+    waitFor: ['-']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'hub.artifactory.gcp.anz/prom/alertmanager:$_PROMETHEUS_ALERT_VERSION'
+    ]
+    id: alertmanager-$_PROMETHEUS_ALERT_VERSION 
+    waitFor: ['-']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'gcr.artifactory.gcp.anz/stackdriver-prometheus/stackdriver-prometheus-sidecar:$_STACKDRIVER_SIDECAR_VERSION'
+    ]
+    id: stackdriver-prometheus-sidecar:$_STACKDRIVER_SIDECAR_VERSION 
+    waitFor: ['-']
+
+  # Create tags
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'hub.artifactory.gcp.anz/prom/prometheus:$_PROMETHEUS_VERSION',
+      '$_PLATFORM_REGISTRY/prom/prometheus:$_PROMETHEUS_VERSION'
+    ]
+    waitFor:
+      - prometheus-$_PROMETHEUS_VERSION
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'hub.artifactory.gcp.anz/prom/alertmanager:$_PROMETHEUS_ALERT_VERSION',
+      '$_PLATFORM_REGISTRY/prom/alertmanager:$_PROMETHEUS_ALERT_VERSION'
+    ]
+    waitFor:
+      - alertmanager-$_PROMETHEUS_ALERT_VERSION
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'gcr.artifactory.gcp.anz/stackdriver-prometheus/stackdriver-prometheus-sidecar:$_STACKDRIVER_SIDECAR_VERSION',
+      '$_PLATFORM_REGISTRY/stackdriver-prometheus/stackdriver-prometheus-sidecar:$_STACKDRIVER_SIDECAR_VERSION'
+    ]
+    waitFor:
+      - stackdriver-prometheus-sidecar:$_STACKDRIVER_SIDECAR_VERSION 
+
+# Push to GCR
+images:
+  - '$_PLATFORM_REGISTRY/prom/prometheus:$_PROMETHEUS_VERSION'
+  - '$_PLATFORM_REGISTRY/prom/alertmanager:$_PROMETHEUS_ALERT_VERSION'
+  - '$_PLATFORM_REGISTRY/stackdriver-prometheus/stackdriver-prometheus-sidecar:$_STACKDRIVER_SIDECAR_VERSION'
+
+options:
+  workerPool: $_WORKER
