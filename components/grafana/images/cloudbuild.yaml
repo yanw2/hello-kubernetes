@@ -1,0 +1,44 @@
+steps:
+  # Pull images
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'hub.artifactory.gcp.anz/grafana/grafana:$_GRAFANA_VERSION'
+    ]
+    id: grafana-$_GRAFANA_VERSION 
+    waitFor: ['-']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'pull',
+      'hub.artifactory.gcp.anz/kiwigrid/k8s-sidecar:$_KIWI_VERSION'
+    ]
+    id: kiwigrid-$_KIWI_VERSION 
+    waitFor: ['-']
+
+  # Create tags
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'hub.artifactory.gcp.anz/grafana/grafana:$_GRAFANA_VERSION',
+      '$_PLATFORM_REGISTRY/grafana/grafana:$_GRAFANA_VERSION'
+    ]
+    waitFor:
+      - grafana-$_GRAFANA_VERSION
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'tag', 
+      'hub.artifactory.gcp.anz/kiwigrid/k8s-sidecar:$_KIWI_VERSION',
+      '$_PLATFORM_REGISTRY/kiwigrid/k8s-sidecar:$_KIWI_VERSION'
+    ]
+    waitFor:
+      - kiwigrid-$_KIWI_VERSION
+
+# Push to GCR
+images:
+  - '$_PLATFORM_REGISTRY/grafana/grafana:$_GRAFANA_VERSION'
+  - '$_PLATFORM_REGISTRY/kiwigrid/k8s-sidecar:$_KIWI_VERSION'
+
+options:
+  workerPool: $_WORKER
