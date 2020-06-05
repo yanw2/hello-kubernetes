@@ -1,6 +1,6 @@
 .PHONY: bootstrap build cluster-create cluster-delete
 
-# ❌ ⚠️  ✅
+# ❌ ⚠️  ✅ 🌀
 
 # COLORS
 GREEN  := $(shell tput -Txterm setaf 2)
@@ -16,25 +16,25 @@ KIND            	:= deployment
 SINGLE_NAMESPACE 	:= true
 
 # Load common variables
-ifneq (${CLUSTER},)
-	include ../../env/${CLUSTER}.env
-else
-$(error Please provide CLUSTER ***)
-endif
+#ifneq (${CLUSTER},)
+#	include ../../env/${CLUSTER}.env
+#else
+#$(error Please provide CLUSTER ***)
+#endif
 
 # Require user input
 CONFIRM := true
 
 # Check cluster to ensure that you are in the correct context when deploying
 # Usage: Makefile target, call directly
-CURRENT_CONTEXT := $(shell kubectl config view --minify | yq r - current-context)
-cluster.check:
-ifeq (,$(findstring ${CLUSTER},${CURRENT_CONTEXT}))
-	printf "❌ Project is not the right context (Cluster: $(or ${CLUSTER},${PROJECT_ID})). Aborting ...\n";
-	exit 1
-else
-	printf "✅ Project is with the correct context: ${CURRENT_CONTEXT} \n"
-endif
+#CURRENT_CONTEXT := $(shell kubectl config view --minify | yq r - current-context)
+#cluster.check:
+#ifeq (,$(findstring ${CLUSTER},${CURRENT_CONTEXT}))
+#	printf "❌ Project is not the right context (Cluster: $(or ${CLUSTER},${PROJECT_ID})). Aborting ...\n";
+#	exit 1
+#else
+#	printf "✅ Project is with the correct context: ${CURRENT_CONTEXT} \n"
+#endif
 
 # Prompt for user confirmation
 # Usage: $(call user_confirm,$message_string)
@@ -111,29 +111,3 @@ define rollback
 	$(call uninstall, $(1),$(2))
 	$(call deploy, $(3),$(2))
 endef
-
-# Add resources to kustomize
-# Usage: $(call add_resources,$directory)
-define add_resources
-	cd $(1); kustomize edit add resource [^k]*.yaml
-endef
-
-# Add kustomize base to kustomize overlays
-# Usage: $(call add_base,$directory)
-define add_base
-	if [ -z $(shell grep base ${OVERLAY_DIR}/kustomization.yaml | sed 's/.*\/\(.*\)/\1/g') ]; then \
-		cd ${OVERLAY_DIR}; kustomize edit add base ../base; \
-	fi;
-endef
-
-## @ Misc
-.PHONY: help
-help: ## Display help
-	awk \
-	  'BEGIN { \
-	    FS = ":.*##"; printf "\nUsage:\n  make \033[36m[TARGET] [CLUSTER]\033[0m\n" \
-	  } /^[a-zA-Z_.]+:.*?##/ { \
-	    printf "    \033[36m%-15s\033[0m	%s\n", $$1, $$2 \
-	  } /^##@/ { \
-	    printf "\n\033[1m%s\033[0m\n", substr($$0, 5) \
-	  }' $(MAKEFILE_LIST)

@@ -7,6 +7,7 @@ SHELL := /bin/bash -o pipefail
 include ./common.mk
 include ./clusters/kind/Makefile
 include ./clusters/minikube/Makefile
+include ./clusters/gke/Makefile
 
 ## @ Misc
 .PHONY: help
