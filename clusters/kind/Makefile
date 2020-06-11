@@ -5,7 +5,7 @@ CLUSTER_NAME ?= poc
 .PHONY: kind.create 
 kind.create: ## Create a kind cluster 
 ifneq ($(shell command -v kind),)
-	unset http_proxy https_proxy && kind create cluster --name $(CLUSTER_NAME)
+	unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY && kind create cluster --name $(CLUSTER_NAME)
 else
 	$(error ❌ ${RED}You do not have 'kind' in your PATH. Please install it and try agian.${RESET})
 endif
