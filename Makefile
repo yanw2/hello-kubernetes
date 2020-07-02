@@ -4,7 +4,6 @@ SHELL := /bin/bash -o pipefail
 .DEFAULT_GOAL := help
 
 # Load components
-include ./common.mk
 include ./clusters/kind/Makefile
 include ./clusters/minikube/Makefile
 include ./clusters/gke/Makefile
