@@ -5,7 +5,7 @@ CLUSTER_NAME ?= poc
 .PHONY: kind.create 
 kind.create: ## Create a kind cluster 
 ifneq ($(shell command -v kind),)
-	kind create cluster --name $(CLUSTER_NAME)
+	kind create cluster --name $(CLUSTER_NAME) -v 1
 else
 	$(error ❌ ${RED}You do not have 'kind' in your PATH. Please install it and try agian.${RESET})
 endif
