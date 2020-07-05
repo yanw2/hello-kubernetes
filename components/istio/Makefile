@@ -20,7 +20,8 @@ istio.install.demo: ## Install istio with demo profile
 # Deploy istio sample bookinfo app
 .PHONY: istio.deploy.sample
 istio.deploy.sample: ## Deploy istio sample bookinfo app
+	kubectl create namespace bookinfo
 	cd ${ISTIO_HOME}/deploy/istio-${ISTIO_VERSION}; \
-	kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml; \
-	kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml; \
+	kubectl -n bookinfo apply -f samples/bookinfo/platform/kube/bookinfo.yaml; \
+	kubectl -n bookinfo apply -f samples/bookinfo/networking/bookinfo-gateway.yaml; \
 	bin/istioctl analyze
