@@ -10,5 +10,4 @@ ifeq (,$(wildcard ${ISTIO_HOME}/deploy/istio-${ISTIO_VERSION}))
 	cd ${ISTIO_HOME}/deploy; curl -L https://istio.io/downloadIstio | ISTIO_VERSION=${ISTIO_VERSION} sh -
 else
 	echo "✅ Istio-${ISTIO_VERSION} is already installed."
-	echo ${ISTIO_HOME}
 endif
