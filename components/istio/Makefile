@@ -11,3 +11,13 @@ ifeq (,$(wildcard ${ISTIO_HOME}/deploy/istio-${ISTIO_VERSION}))
 else
 	echo "✅ Istio-${ISTIO_VERSION} is already installed."
 endif
+
+# Install istio with demo profile
+.PHONY: istio.install.demo
+istio.install.demo: ## Install istio with demo profile
+	${ISTIO_HOME}/deploy/istio-${ISTIO_VERSION}/bin/istioctl install --set profile=demo
+
+# Deploy istio sample bookinfo app
+.PHONY: istio.deploy.sample
+istio.deploy.sample: ## Deploy istio sample bookinfo app
+	kubectl apply -f ${ISTIO_HOME}/deploy/istio-${ISTIO_VERSION}/samples/bookinfo/platform/kube/bookinfo.yaml
