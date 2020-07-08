@@ -9,10 +9,11 @@
 > Which resources are included in this pull request?
 
 - [ ] Cluster 
+- [ ] Components - Istio
 - [ ] Components - Prometheus
 - [ ] Components - Grafana 
-- [ ] Components - Istio
-- [ ] Components - Spinnaker
+- [ ] Components - Kiali 
+- [ ] Components - Jaeger
 - [ ] Documentation
 
 

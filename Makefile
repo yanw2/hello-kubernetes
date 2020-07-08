@@ -3,10 +3,17 @@ SHELL := /bin/bash -o pipefail
 .SILENT:
 .DEFAULT_GOAL := help
 
-# Load components
+# Load environment parameters (default to local)
+include ./env/local.env
+
+# Load clusters
 include ./clusters/kind/Makefile
 include ./clusters/minikube/Makefile
 include ./clusters/gke/Makefile
+
+# Load components
+include ./components/common.mk
+include ./components/istio/Makefile
 
 ## @ Misc
 .PHONY: help
