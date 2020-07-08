@@ -16,9 +16,10 @@ endif
 .PHONY: istio.install.demo
 istio.install.demo: ## Install istio with demo profile
 	${ISTIO_HOME}/deploy/istio-${ISTIO_VERSION}/bin/istioctl install --set profile=demo
+	kubectl label namespace default istio-injection=enabled
 
 # Deploy istio sample bookinfo app
-.PHONY: istio.deploy.sample
+.PHONY: istio.deploy.bookinfo
 istio.deploy.sample: ## Deploy istio sample bookinfo app
 	kubectl create namespace bookinfo
 	cd ${ISTIO_HOME}/deploy/istio-${ISTIO_VERSION}; \
