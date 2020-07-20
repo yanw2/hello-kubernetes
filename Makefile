@@ -15,7 +15,7 @@ include ./clusters/gke/Makefile
 include ./components/common.mk
 include ./components/istio/Makefile
 
-## @ Misc
+##@ Miscellaneous
 .PHONY: help
 help: ## Display help
 	awk \
