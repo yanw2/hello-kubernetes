@@ -1,3 +1,4 @@
+##@ Infrastructure
 # Create a kind cluster
 .PHONY: kind.create 
 kind.create: ## Create a kind cluster 
