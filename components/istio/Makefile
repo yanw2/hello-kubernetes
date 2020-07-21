@@ -4,7 +4,7 @@
 ISTIO_HOME 					?= ./components/istio
 BOOKINFO_NAMESPACE 	?= bookinfo
 
-# Fetch core istio resources 
+# Fetch core istio resources
 .PHONY: istio.fetch
 istio.fetch: ## Fetch core istio resources
 ifeq (,$(wildcard $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)))
@@ -23,9 +23,25 @@ istio.install.demo: ## Install istio with demo profile
 # Deploy istio sample bookinfo app
 .PHONY: istio.deploy.bookinfo
 istio.deploy.bookinfo: ## Deploy istio sample bookinfo app
-	kubectl create namespace $(BOOKINFO_NAMESPACE) 
+	kubectl create namespace $(BOOKINFO_NAMESPACE)
 	kubectl label namespace $(BOOKINFO_NAMESPACE) istio-injection=enabled
 	cd $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION); \
 	kubectl -n bookinfo apply -f samples/bookinfo/platform/kube/bookinfo.yaml; \
 	kubectl -n bookinfo apply -f samples/bookinfo/networking/bookinfo-gateway.yaml; \
 	bin/istioctl analyze -n bookinfo
+
+# Open prometheus dashboard
+.PHONY: istio.view.prometheus
+istio.view.prometheus: ## Open prometheus dashboard
+	$(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl dashboard prometheus
+
+# Open kiali dashboard
+.PHONY: istio.view.kiali
+istio.view.kiali: ## Open kiali dashboard 
+	$(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl dashboard kiali
+
+# Open grafana dashboard
+.PHONY: istio.view.grafana
+istio.view.grafana: ## Open grafana dashboard
+	$(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl dashboard grafana 
+
