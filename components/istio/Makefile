@@ -22,9 +22,9 @@ istio.install.demo: ## Install istio with demo profile
 
 # Deploy istio sample bookinfo app
 .PHONY: istio.deploy.bookinfo
-istio.deploy.sample: ## Deploy istio sample bookinfo app
+istio.deploy.bookinfo: ## Deploy istio sample bookinfo app
 	kubectl create namespace $(BOOKINFO_NAMESPACE) 
-	kubectl label namespace bookinfo istio-injection=enabled
+	kubectl label namespace $(BOOKINFO_NAMESPACE) istio-injection=enabled
 	cd $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION); \
 	kubectl -n bookinfo apply -f samples/bookinfo/platform/kube/bookinfo.yaml; \
 	kubectl -n bookinfo apply -f samples/bookinfo/networking/bookinfo-gateway.yaml; \
