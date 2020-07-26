@@ -1,12 +1,15 @@
 # Istio global variable
 ISTIO_HOME 					?= ./components/istio
 ISTIO_CTL						?= $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl
+KIALI_USERNAME 			?= admin
+KIALI_PASSWORD 			?= admin
+ISTIO_NAMESPACE			?= istio-system
 BOOKINFO_NAMESPACE 	?= bookinfo
 
 ##@ Istio Management
 # Fetch core istio resources
-.PHONY: istio.fetch
-istio.fetch: ## Fetch core istio resources
+.PHONY: istio.fetch.core
+istio.fetch.core: ## Fetch core istio resources
 ifeq (,$(wildcard $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)))
 	$(call user_confirm,Istio folder [version: $(ISTIO_VERSION)] not found. Install now)
 	mkdir -p $(ISTIO_HOME)/deploy
@@ -23,7 +26,11 @@ istio.install.default: ## Install istio with default profile and observability s
 		--set addonComponents.kiali.enabled=true \
 		--set addonComponents.prometheus.enabled=true \
 		--set addonComponents.tracing.enabled=true \
+		--set values.kiali.enabled=true \
+    --set "values.kiali.dashboard.jaegerURL=http://jaeger-query:16686" \
+    --set "values.kiali.dashboard.grafanaURL=http://grafana:3000" \
 		--set values.global.controlPlaneSecurityEnabled=true
+	kubectl apply -f $(ISTIO_HOME)/custom/kiali-default-secret.yaml
 
 # Install istio with demo profile
 .PHONY: istio.install.demo
@@ -42,21 +49,21 @@ istio.deploy.bookinfo: ## Deploy istio sample bookinfo app
 
 ##@ Observability
 # Open prometheus dashboard
-.PHONY: o11y.prometheus
-o11y.prometheus: ## Open prometheus dashboard
+.PHONY: o11y.view.prometheus
+o11y.view.prometheus: ## Open prometheus dashboard
 	$(ISTIO_CTL) dashboard prometheus
 
 # Open grafana dashboard
-.PHONY: o11y.grafana
-o11y.grafana: ## Open grafana dashboard
+.PHONY: o11y.view.grafana
+o11y.view.grafana: ## Open grafana dashboard
 	$(ISTIO_CTL) dashboard grafana
 
 # Open kiali dashboard
-.PHONY: o11y.kiali
-o11y.kiali: ## Open kiali dashboard
+.PHONY: o11y.view.kiali
+o11y.view.kiali: ## Open kiali dashboard
 	$(ISTIO_CTL) dashboard kiali
 
 # Open jaeger dashboard
-.PHONY: o11y.jaeger
-o11y.jaeger: ## Open jaeger dashboard
+.PHONY: o11y.view.jaeger
+o11y.view.jaeger: ## Open jaeger dashboard
 	$(ISTIO_CTL) dashboard jaeger
