@@ -2,6 +2,7 @@
 
 # Istio global variable
 ISTIO_HOME 					?= ./components/istio
+ISTIO_CTL						?= $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl 
 BOOKINFO_NAMESPACE 	?= bookinfo
 
 # Fetch core istio resources
@@ -15,10 +16,20 @@ else
 	echo "✅ Istio-$(ISTIO_VERSION) is already installed."
 endif
 
+# Install istio with default profile and observability stack
+.PHONY: istio.install.default
+istio.install.default: ## Install istio with default profile and observability stack
+	$(ISTIO_CTL) install \
+		--set addonComponents.grafana.enabled=true \
+		--set addonComponents.kiali.enabled=true \
+		--set addonComponents.prometheus.enabled=true \
+		--set addonComponents.tracing.enabled=true \
+		--set values.global.controlPlaneSecurityEnabled=true
+
 # Install istio with demo profile
 .PHONY: istio.install.demo
 istio.install.demo: ## Install istio with demo profile
-	$(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl install --set profile=demo
+	$(ISTIO_CTL) install --set profile=demo
 
 # Deploy istio sample bookinfo app
 .PHONY: istio.deploy.bookinfo
@@ -33,15 +44,14 @@ istio.deploy.bookinfo: ## Deploy istio sample bookinfo app
 # Open prometheus dashboard
 .PHONY: istio.view.prometheus
 istio.view.prometheus: ## Open prometheus dashboard
-	$(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl dashboard prometheus
+	$(ISTIO_CTL) dashboard prometheus
 
 # Open kiali dashboard
 .PHONY: istio.view.kiali
 istio.view.kiali: ## Open kiali dashboard 
-	$(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl dashboard kiali
+	$(ISTIO_CTL) dashboard kiali
 
 # Open grafana dashboard
 .PHONY: istio.view.grafana
 istio.view.grafana: ## Open grafana dashboard
-	$(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl dashboard grafana 
-
+	$(ISTIO_CTL) dashboard grafana 
