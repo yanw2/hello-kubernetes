@@ -1,10 +1,9 @@
-##@ Istio Management
-
 # Istio global variable
 ISTIO_HOME 					?= ./components/istio
-ISTIO_CTL						?= $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl 
+ISTIO_CTL						?= $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl
 BOOKINFO_NAMESPACE 	?= bookinfo
 
+##@ Istio Management
 # Fetch core istio resources
 .PHONY: istio.fetch
 istio.fetch: ## Fetch core istio resources
@@ -41,17 +40,23 @@ istio.deploy.bookinfo: ## Deploy istio sample bookinfo app
 	kubectl -n bookinfo apply -f samples/bookinfo/networking/bookinfo-gateway.yaml; \
 	bin/istioctl analyze -n bookinfo
 
+##@ Observability
 # Open prometheus dashboard
-.PHONY: istio.view.prometheus
-istio.view.prometheus: ## Open prometheus dashboard
+.PHONY: o11y.prometheus
+o11y.prometheus: ## Open prometheus dashboard
 	$(ISTIO_CTL) dashboard prometheus
 
+# Open grafana dashboard
+.PHONY: o11y.grafana
+o11y.grafana: ## Open grafana dashboard
+	$(ISTIO_CTL) dashboard grafana
+
 # Open kiali dashboard
-.PHONY: istio.view.kiali
-istio.view.kiali: ## Open kiali dashboard 
+.PHONY: o11y.kiali
+o11y.kiali: ## Open kiali dashboard
 	$(ISTIO_CTL) dashboard kiali
 
-# Open grafana dashboard
-.PHONY: istio.view.grafana
-istio.view.grafana: ## Open grafana dashboard
-	$(ISTIO_CTL) dashboard grafana 
+# Open jaeger dashboard
+.PHONY: o11y.jaeger
+o11y.jaeger: ## Open jaeger dashboard
+	$(ISTIO_CTL) dashboard jaeger
