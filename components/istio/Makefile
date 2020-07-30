@@ -39,6 +39,7 @@ istio.install.legacy: ## Install istio with the legacy version at work
 	$(ISTIO_LEGACY_CTL) manifest apply \
 		--set values.global.mtls.enabled=true \
 		--set values.global.controlPlaneSecurityEnabled=true
+	kubectl label namespace default istio-injection=enabled
 
 ##@ Demo Applications
 # Deploy istio sample bookinfo app
