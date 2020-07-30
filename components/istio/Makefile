@@ -31,7 +31,7 @@ istio.install.default: ## Install istio with default profile and observability s
     --set "values.kiali.dashboard.jaegerURL=http://jaeger-query:16686" \
     --set "values.kiali.dashboard.grafanaURL=http://grafana:3000" \
 		--set values.global.controlPlaneSecurityEnabled=true
-	kubectl apply -f $(ISTIO_HOME)/custom/kiali-default-secret.yaml
+	kubectl apply -f $(ISTIO_HOME)/custom/kiali/kiali-default-secret.yaml
 
 # Install istio with the legacy version at work
 .PHONY: istio.install.legacy
