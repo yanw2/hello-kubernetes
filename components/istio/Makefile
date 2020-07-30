@@ -1,6 +1,7 @@
 # Istio global variable
 ISTIO_HOME 					?= ./components/istio
 ISTIO_CTL						?= $(ISTIO_HOME)/deploy/istio-$(ISTIO_VERSION)/bin/istioctl
+ISTIO_LEGACY_CTL		?= $(ISTIO_HOME)/deploy/istio-$(ISTIO_LEGACY_VERSION)/bin/istioctl
 KIALI_USERNAME 			?= admin
 KIALI_PASSWORD 			?= admin
 ISTIO_NAMESPACE			?= istio-system
@@ -32,11 +33,14 @@ istio.install.default: ## Install istio with default profile and observability s
 		--set values.global.controlPlaneSecurityEnabled=true
 	kubectl apply -f $(ISTIO_HOME)/custom/kiali-default-secret.yaml
 
-# Install istio with demo profile
-.PHONY: istio.install.demo
-istio.install.demo: ## Install istio with demo profile
-	$(ISTIO_CTL) install --set profile=demo
+# Install istio with the legacy version at work
+.PHONY: istio.install.legacy
+istio.install.legacy: ## Install istio with the legacy version at work 
+	$(ISTIO_LEGACY_CTL) manifest apply \
+		--set values.global.mtls.enabled=true \
+		--set values.global.controlPlaneSecurityEnabled=true
 
+##@ Demo Applications
 # Deploy istio sample bookinfo app
 .PHONY: istio.deploy.bookinfo
 istio.deploy.bookinfo: ## Deploy istio sample bookinfo app
