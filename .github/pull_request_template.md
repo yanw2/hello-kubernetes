@@ -11,7 +11,7 @@
 - [ ] Cluster 
 - [ ] Documentation
 - [ ] Components - Istio
-- [ ] Components - Microservices Demo App 
+- [ ] Components - Online Boutique Demo App 
 
 ### Impact
 > What happens when this change is applied? What is the scope of the impact?
