@@ -9,13 +9,9 @@
 > Which resources are included in this pull request?
 
 - [ ] Cluster 
-- [ ] Components - Istio
-- [ ] Components - Prometheus
-- [ ] Components - Grafana 
-- [ ] Components - Kiali 
-- [ ] Components - Jaeger
 - [ ] Documentation
-
+- [ ] Components - Istio
+- [ ] Components - Online Boutique Demo App 
 
 ### Impact
 > What happens when this change is applied? What is the scope of the impact?

@@ -41,7 +41,6 @@ istio.install.legacy: ## Install istio with the legacy version at work
 		--set values.global.controlPlaneSecurityEnabled=true
 	kubectl label namespace default istio-injection=enabled
 
-##@ Demo Applications
 # Deploy istio sample bookinfo app
 .PHONY: istio.deploy.bookinfo
 istio.deploy.bookinfo: ## Deploy istio sample bookinfo app
