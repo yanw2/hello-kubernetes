@@ -14,7 +14,7 @@ include ./clusters/gke/Makefile
 # Load components
 include ./components/common.mk
 include ./components/istio/Makefile
-include ./components/microservices-demo/Makefile
+include ./components/online-boutique/Makefile
 
 ##@ Miscellaneous
 .PHONY: help

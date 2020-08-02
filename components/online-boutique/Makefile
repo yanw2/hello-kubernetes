@@ -1,5 +1,5 @@
 # Microservices-demo global variable
-MICRO_HOME 				?= ./components/microservices-demo
+MICRO_HOME 				?= ./components/online-boutique
 MICRO_GITHUB_REPO	?= https://github.com/GoogleCloudPlatform/microservices-demo.git
 
 ##@ Microservices Demo Applications 
@@ -12,10 +12,6 @@ ifeq (,$(wildcard $(MICRO_HOME)/deploy/microservices-demo))
 	cd $(MICRO_HOME)/deploy; git clone $(MICRO_GITHUB_REPO)
 else
 	echo "✅ Microservices Demo Applications is already checked out."
-ifneq ($(shell command -v skaffold),)
-	echo "⚠️  First time will be slow, it can take ~20 minutes."
-	cd $(MICRO_HOME)/deploy/microservices-demo && skaffold run	
-else
-	$(error ❌ ${RED}You do not have 'skaffold' in your PATH. Please install it and try agian.${RESET})
 endif
-endif
+	echo "⚠️  Using pre-built container images to deploy the apps faster."
+	kubectl apply -f $(MICRO_HOME)/deploy/microservices-demo/release/kubernetes-manifests.yaml
