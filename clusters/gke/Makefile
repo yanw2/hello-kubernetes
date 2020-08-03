@@ -1,16 +1,17 @@
 # Cluster variables
 NAME 					?= wenjing-sandbox
 ZONE 					?= australia-southeast1-a
-MACHINE_TYPE 	?= n1-standard-1
+MACHINE_TYPE 	?= n1-standard-2
+VERSION				?= 1.16.13-gke.1
 
 # Create a gke cluster
 .PHONY: gke.create
 gke.create: ## Create a gke cluster
 	printf "🌀 Creating the GKE cluster - $(NAME) \n"
 	gcloud container clusters create $(NAME) \
+		--release-channel=regular \
 		--enable-ip-alias --cluster-ipv4-cidr=10.0.0.0/21 \
-		--create-subnetwork=name="$(strip $(NAME))-subnet",range=10.4.32.0/21 \
-		--services-ipv4-cidr=10.4.0.0/19 --default-max-pods-per-node=8 \
+		--enable-autoscaling --min-nodes=1 --max-nodes=5 \
 		--zone=$(ZONE)
 	printf "\n🌀 Getting the credentials for the cluster - $(NAME) \n"
 	gcloud container clusters get-credentials $(NAME) --zone $(ZONE)
