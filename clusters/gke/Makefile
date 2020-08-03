@@ -1,7 +1,7 @@
 # Cluster variables
 CLUSTER_NAME 			?= wenjing-sandbox
 COMPUTE_ZONE 			?= australia-southeast1-a
-MACHINE_TYPE 			?= n1-standard-2
+MACHINE_TYPE 			?= n1-standard-3
 RELEASE_CHANNEL  	?= regular
 
 # Create a gke cluster
