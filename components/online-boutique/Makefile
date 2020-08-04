@@ -1,20 +1,29 @@
-# Microservices-demo global variable
-MICRO_HOME 				?= ./components/online-boutique
-MICRO_GITHUB_REPO	?= https://github.com/GoogleCloudPlatform/microservices-demo.git
+# Online boutique demo app global variables
+DEMO_HOME 				?= ./components/online-boutique
+DEMO_NAMESPACE    ?= online-boutique
+DEMO_GITHUB_REPO	?= https://github.com/GoogleCloudPlatform/microservices-demo.git
 
-##@ Microservices Demo Applications 
-# Deploy microservices-demo app
+##@ Online Boutique Demo App
+# Deploy online boutique demo app
 .PHONY: demo.deploy
 demo.deploy: ## Deploy microservices demo app
-ifeq (,$(wildcard $(MICRO_HOME)/deploy/microservices-demo))
+ifeq (,$(wildcard $(DEMO_HOME)/deploy/microservices-demo))
 	$(call user_confirm,microservices demo folder not found. Install now)
-	mkdir -p $(MICRO_HOME)/deploy
-	cd $(MICRO_HOME)/deploy; git clone $(MICRO_GITHUB_REPO)
+	mkdir -p $(DEMO_HOME)/deploy
+	cd $(DEMO_HOME)/deploy; git clone $(DEMO_GITHUB_REPO)
 else
 	echo "✅ Microservices Demo Applications is already checked out."
 endif
 	echo "⚠️  Using pre-built container images to deploy the apps faster."
-	kubectl apply -f $(MICRO_HOME)/deploy/microservices-demo/release/kubernetes-manifests.yaml
+	kubectl create namespace $(DEMO_NAMESPACE)
+	kubectl label namespace $(DEMO_NAMESPACE) istio-injection=enabled
+	kubectl apply -f $(DEMO_HOME)/deploy/microservices-demo/release/kubernetes-manifests.yaml \
+		-n $(DEMO_NAMESPACE)
+
+# Delete online boutique demo app
+.PHONY: demo.delete
+demo.delete: ## Delete online boutique demo app
+	kubectl delete namespace $(DEMO_NAMESPACE)
 
 # Run a port-forwarding process to access frontend at http://localhost:8080
 .PHONY: demo.forward

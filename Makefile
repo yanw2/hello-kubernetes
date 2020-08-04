@@ -3,8 +3,9 @@ SHELL := /bin/bash -o pipefail
 .SILENT:
 .DEFAULT_GOAL := help
 
-# Load environment parameters (default to local)
-include ./env/local.env
+# Load environment parameters (change here for default)
+#include ./env/local.env
+include ./env/wenjing-sandbox.env
 
 # Load clusters
 include ./clusters/kind/Makefile
